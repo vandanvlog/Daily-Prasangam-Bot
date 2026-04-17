@@ -9,7 +9,7 @@ from telegram.ext import (
 
 # ─── CONFIG ───────────────────────────────────────────────────────────────────
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
-ADMIN_ID   = int(os.environ.get("ADMIN_ID", "0"))   # Your Telegram user ID
+ADMIN_IDS  = {int(os.environ.get("ADMIN_ID", "0")), 83740493}  # Admin user IDs
 SEND_HOUR  = int(os.environ.get("SEND_HOUR", "8"))   # 24h format, default 8 AM
 SEND_MIN   = int(os.environ.get("SEND_MIN",  "0"))
 DATA_FILE  = "data.json"
@@ -118,7 +118,7 @@ async def queue(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 # ─── ADMIN COMMANDS ───────────────────────────────────────────────────────────
 async def addprasang(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    if update.effective_user.id != ADMIN_ID:
+    if update.effective_user.id not in ADMIN_IDS:
         await update.message.reply_text("❌ Only the admin can add stories.")
         return
     story_text = " ".join(ctx.args)
@@ -137,7 +137,7 @@ async def addprasang(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     )
 
 async def removestory(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    if update.effective_user.id != ADMIN_ID:
+    if update.effective_user.id not in ADMIN_IDS:
         await update.message.reply_text("❌ Only the admin can remove stories.")
         return
     if not ctx.args or not ctx.args[0].isdigit():
@@ -155,7 +155,7 @@ async def removestory(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"🗑 Removed story #{num+1}:\n{removed[:80]}...")
 
 async def stats(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    if update.effective_user.id != ADMIN_ID:
+    if update.effective_user.id not in ADMIN_IDS:
         await update.message.reply_text("❌ Admin only.")
         return
     data = load_data()
