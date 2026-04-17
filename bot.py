@@ -10,8 +10,6 @@ from telegram.ext import (
 # ─── CONFIG ───────────────────────────────────────────────────────────────────
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
 ADMIN_IDS  = {int(os.environ.get("ADMIN_ID", "0")), 83740493}  # Admin user IDs
-SEND_HOUR  = int(os.environ.get("SEND_HOUR", "8"))   # 24h format, default 8 AM
-SEND_MIN   = int(os.environ.get("SEND_MIN",  "0"))
 DATA_FILE  = "data.json"
 
 logging.basicConfig(level=logging.INFO)
@@ -230,10 +228,14 @@ def main():
     # Unknown
     app.add_handler(MessageHandler(filters.COMMAND, unknown))
 
-    # Daily job
+    # Two daily jobs
     app.job_queue.run_daily(
         send_daily_story,
-        time=time(hour=SEND_HOUR, minute=SEND_MIN)
+        time=time(hour=6, minute=30)
+    )
+    app.job_queue.run_daily(
+        send_daily_story,
+        time=time(hour=16, minute=30)
     )
 
     logger.info(f"Bot started. Daily stories at {SEND_HOUR:02d}:{SEND_MIN:02d} UTC")
