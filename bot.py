@@ -117,7 +117,7 @@ async def queue(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("\n".join(lines), parse_mode="Markdown")
 
 # ─── ADMIN COMMANDS ───────────────────────────────────────────────────────────
-async def addstory(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+async def addprasang(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("❌ Only the admin can add stories.")
         return
@@ -223,7 +223,7 @@ def main():
     app.add_handler(CommandHandler("queue",  queue))
 
     # Admin commands
-    app.add_handler(CommandHandler("addstory",    addstory))
+    app.add_handler(CommandHandler("addprasang",    addprasang))
     app.add_handler(CommandHandler("removestory", removestory))
     app.add_handler(CommandHandler("stats",       stats))
 
