@@ -208,6 +208,16 @@ async def unknown(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         "Try /start to begin or /today to read a story!"
     )
 
+async def clear_stories(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id not in ADMIN_IDS:
+        await update.message.reply_text("❌ Admin only.")
+        return
+    data = load_data()
+    data["stories"] = []
+    data["current_index"] = 0
+    save_data(data)
+    await update.message.reply_text("🗑 All stories cleared!")
+
 # ─── MAIN ─────────────────────────────────────────────────────────────────────
 def main():
     app = Application.builder().token(BOT_TOKEN).build()
@@ -224,6 +234,7 @@ def main():
     app.add_handler(CommandHandler("addprasang",    addprasang))
     app.add_handler(CommandHandler("removestory", removestory))
     app.add_handler(CommandHandler("stats",       stats))
+    app.add_handler(CommandHandler("clear",       clear_stories))
 
     # Unknown
     app.add_handler(MessageHandler(filters.COMMAND, unknown))
@@ -238,7 +249,7 @@ def main():
         time=time(hour=16, minute=30)
     )
 
-    logger.info(f"Bot started. Daily stories at {SEND_HOUR:02d}:{SEND_MIN:02d} UTC")
+    logger.info("Bot started. Daily stories at 6:30 AM and 4:30 PM UTC")
     app.run_polling()
 
 if __name__ == "__main__":
